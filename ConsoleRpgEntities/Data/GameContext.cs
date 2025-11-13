@@ -1,6 +1,7 @@
 ﻿using ConsoleRpgEntities.Models.Abilities.PlayerAbilities;
 using ConsoleRpgEntities.Models.Characters;
 using ConsoleRpgEntities.Models.Characters.Monsters;
+using ConsoleRpgEntities.Models.Equipment;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsoleRpgEntities.Data
@@ -10,6 +11,11 @@ namespace ConsoleRpgEntities.Data
         public DbSet<Player> Players { get; set; }
         public DbSet<Monster> Monsters { get; set; }
         public DbSet<Ability> Abilities { get; set; }
+        public DbSet<Equipment> Equipment { get; set; }
+
+        public DbSet<Item> Items { get; set; }
+        public DbSet<Weapon> Weapons { get; set; }
+        public DbSet<Armor> Armors { get; set; }
 
         public GameContext(DbContextOptions<GameContext> options) : base(options)
         {
@@ -19,12 +25,12 @@ namespace ConsoleRpgEntities.Data
         {
             // Configure TPH for Character hierarchy
             modelBuilder.Entity<Monster>()
-                .HasDiscriminator<string>(m=> m.MonsterType)
+                .HasDiscriminator<string>(m => m.MonsterType)
                 .HasValue<Goblin>("Goblin");
 
             // Configure TPH for Ability hierarchy
             modelBuilder.Entity<Ability>()
-                .HasDiscriminator<string>(pa=>pa.AbilityType)
+                .HasDiscriminator<string>(pa => pa.AbilityType)
                 .HasValue<ShoveAbility>("ShoveAbility");
 
             // Configure many-to-many relationship
@@ -33,10 +39,31 @@ namespace ConsoleRpgEntities.Data
                 .WithMany(a => a.Players)
                 .UsingEntity(j => j.ToTable("PlayerAbilities"));
 
+            modelBuilder.Entity<Item>()
+                .HasDiscriminator<string>("ItemType")
+                .HasValue<Weapon>("Weapon")
+                .HasValue<Armor>("Armor");
+            
+            modelBuilder.Entity<Equipment>()
+                .HasOne(e => e.Weapon)
+                .WithMany()
+                .HasForeignKey(e => e.WeaponId)
+                .OnDelete(DeleteBehavior.NoAction);
+            
+            modelBuilder.Entity<Equipment>()
+                .HasOne(e => e.Armor)
+                .WithMany()
+                .HasForeignKey(e => e.ArmorId)
+                .OnDelete(DeleteBehavior.NoAction);
+            
+            modelBuilder.Entity<Player>()
+                .HasOne(p => p.Equipment)
+                .WithMany()
+                .HasForeignKey(p => p.EquipmentId)
+                .OnDelete(DeleteBehavior.NoAction);
+            
+
             base.OnModelCreating(modelBuilder);
         }
-
     }
 }
-
-

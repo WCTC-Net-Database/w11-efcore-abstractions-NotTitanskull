@@ -10,12 +10,26 @@ namespace ConsoleRpgEntities.Models.Characters
         public int Id { get; set; }
         public string Name { get; set; }
         public int Health { get; set; }
-        public virtual IEnumerable<Ability> Abilities { get; set; }
-
+        
+        public int? EquipmentId { get; set; }
+        
+        public virtual IEnumerable<Ability> Abilities { get; set; } = new List<Ability>();
+        public virtual ConsoleRpgEntities.Models.Equipment.Equipment Equipment { get; set; }
+        
+        public int GetAttackPower() => Equipment?.Weapon?.Damage ?? 1;
         public void Attack(ITargetable target)
         {
             // Player-specific attack logic
-            Console.WriteLine($"{Name} attacks {target.Name} with a sword!");
+            var weaponPower = GetAttackPower();
+            Console.WriteLine($"{Name} attacks {target.Name} (AttackPower: {weaponPower})");
+        }
+        
+        public virtual void TakeDamage(int amount)
+        {
+            var reduction = Equipment?.Armor?.Defense ?? 0;
+            var net = Math.Max(0, amount - reduction);
+            Health -= net;
+            Console.WriteLine($"{Name} takes {net} damage (reduced by {reduction}). Health is now {Health}.");
         }
 
         public void UseAbility(IAbility ability, ITargetable target)
