@@ -1,4 +1,4 @@
--- Seed Monsters
+-- Seed additional Monsters (Bob Goblin already exists from InitialSeedData)
 INSERT INTO Monsters (Name, Health, AggressionLevel, MonsterType)
 VALUES
     ('Goblin Scout', 30, 4, 'Goblin'),

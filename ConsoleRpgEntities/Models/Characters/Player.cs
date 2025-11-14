@@ -5,15 +5,15 @@ namespace ConsoleRpgEntities.Models.Characters
 {
     public class Player : ITargetable, IPlayer
     {
-        public int Experience { get; set; }
-
         public int Id { get; set; }
+        public int Experience { get; set; }
         public required string Name { get; set; }
         public int Health { get; set; }
-        public virtual IEnumerable<Ability>? Abilities {get;set;}
         
         public int? EquipmentId { get; set; }
         public virtual Equipment.Equipment? Equipment { get; set; }
+        
+        public virtual ICollection<Ability>? Abilities {get;set;}
         
         public int GetAttackPower() => Equipment?.Weapon?.Damage ?? 1;
         

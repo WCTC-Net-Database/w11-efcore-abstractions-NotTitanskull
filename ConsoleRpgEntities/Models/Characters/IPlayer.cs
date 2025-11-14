@@ -7,8 +7,11 @@ public interface IPlayer
 {
     int Id { get; set; }
     string Name { get; set; }
+    int Health { get; set; }
+    void TakeDamage(int damage);
+    Equipment.Equipment? Equipment { get; set; }
 
-    IEnumerable<Ability> Abilities { get; set; }
+    ICollection<Ability> Abilities { get; set; }
 
     void Attack(ITargetable target);
     void UseAbility(IAbility ability, ITargetable target);

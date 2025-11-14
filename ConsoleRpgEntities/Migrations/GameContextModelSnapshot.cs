@@ -113,18 +113,15 @@ namespace ConsoleRpgEntities.Migrations
                     b.Property<int>("Health")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ItemId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EquipmentId");
-
-                    b.HasIndex("ItemId");
+                    b.HasIndex("EquipmentId")
+                        .IsUnique()
+                        .HasFilter("[EquipmentId] IS NOT NULL");
 
                     b.ToTable("Players");
                 });
@@ -240,12 +237,8 @@ namespace ConsoleRpgEntities.Migrations
             modelBuilder.Entity("ConsoleRpgEntities.Models.Characters.Player", b =>
                 {
                     b.HasOne("ConsoleRpgEntities.Models.Equipment.Equipment", "Equipment")
-                        .WithMany()
-                        .HasForeignKey("EquipmentId");
-
-                    b.HasOne("ConsoleRpgEntities.Models.Equipment.Item", null)
-                        .WithMany("Players")
-                        .HasForeignKey("ItemId");
+                        .WithOne("Player")
+                        .HasForeignKey("ConsoleRpgEntities.Models.Characters.Player", "EquipmentId");
 
                     b.Navigation("Equipment");
                 });
@@ -265,9 +258,9 @@ namespace ConsoleRpgEntities.Migrations
                     b.Navigation("Weapon");
                 });
 
-            modelBuilder.Entity("ConsoleRpgEntities.Models.Equipment.Item", b =>
+            modelBuilder.Entity("ConsoleRpgEntities.Models.Equipment.Equipment", b =>
                 {
-                    b.Navigation("Players");
+                    b.Navigation("Player");
                 });
 #pragma warning restore 612, 618
         }

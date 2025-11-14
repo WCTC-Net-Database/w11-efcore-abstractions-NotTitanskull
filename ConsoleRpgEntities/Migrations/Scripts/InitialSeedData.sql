@@ -1,21 +1,17 @@
-﻿SET IDENTITY_INSERT Players ON;
-INSERT INTO Players (Id, Name, Health, Experience)
+﻿-- Seed basic weapon and armor
+SET IDENTITY_INSERT Items ON;
+INSERT INTO Items (Id, Name, Description, ItemType, Damage, Defense)
 VALUES
-    (1, 'Sir Lancelot', 100, 0);
-SET IDENTITY_INSERT Players OFF;
+    (1, 'Iron Sword', 'A sturdy iron blade', 'Weapon', 15, NULL),
+    (2, 'Iron Plate Armor', 'Heavy iron protection', 'Armor', NULL, 10);
+SET IDENTITY_INSERT Items OFF;
 
-SET IDENTITY_INSERT Monsters ON;
-INSERT INTO Monsters (Id, Name, MonsterType, Health, AggressionLevel, Sneakiness)
+-- Seed equipment
+SET IDENTITY_INSERT Equipments ON;
+INSERT INTO Equipments (Id, WeaponId, ArmorId)
 VALUES
-    (1, 'Bob Goblin', 'Goblin', 20, 10, 3);
-SET IDENTITY_INSERT Monsters OFF;
+    (1, 1, 2);
+SET IDENTITY_INSERT Equipments OFF;
 
-SET IDENTITY_INSERT Abilities ON;
-INSERT INTO Abilities (Id, Name, Description, AbilityType, Damage, Distance)
-VALUES
-    (1, 'Shove', 'Power Shove', 'ShoveAbility', 10, 5);
-SET IDENTITY_INSERT Abilities OFF;
-
-INSERT INTO PlayerAbilities (PlayersId, AbilitiesId)
-VALUES
-    (1, 1); 
+-- Link equipment to player
+UPDATE Players SET EquipmentId = 1 WHERE Id = 1;
