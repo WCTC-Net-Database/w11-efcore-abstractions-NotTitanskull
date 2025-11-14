@@ -8,19 +8,19 @@ namespace ConsoleRpgEntities.Models.Characters
         public int Experience { get; set; }
 
         public int Id { get; set; }
-        public string Name { get; set; }
+        public required string Name { get; set; }
         public int Health { get; set; }
+        public virtual IEnumerable<Ability>? Abilities {get;set;}
         
         public int? EquipmentId { get; set; }
-        
-        public virtual IEnumerable<Ability> Abilities { get; set; } = new List<Ability>();
-        public virtual ConsoleRpgEntities.Models.Equipment.Equipment Equipment { get; set; }
+        public virtual Equipment.Equipment? Equipment { get; set; }
         
         public int GetAttackPower() => Equipment?.Weapon?.Damage ?? 1;
+        
         public void Attack(ITargetable target)
         {
-            // Player-specific attack logic
             var weaponPower = GetAttackPower();
+            Console.WriteLine($"{Name} attacks {target.Name} with a sword!");
             Console.WriteLine($"{Name} attacks {target.Name} (AttackPower: {weaponPower})");
         }
         

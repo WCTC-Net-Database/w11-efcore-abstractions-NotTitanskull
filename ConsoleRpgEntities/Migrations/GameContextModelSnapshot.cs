@@ -75,6 +75,9 @@ namespace ConsoleRpgEntities.Migrations
                     b.Property<int>("AggressionLevel")
                         .HasColumnType("int");
 
+                    b.Property<int>("AttackPower")
+                        .HasColumnType("int");
+
                     b.Property<int>("Health")
                         .HasColumnType("int");
 
@@ -102,13 +105,15 @@ namespace ConsoleRpgEntities.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int?>("EquipmentId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("Experience")
                         .HasColumnType("int");
 
                     b.Property<int>("Health")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ItemId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -118,6 +123,8 @@ namespace ConsoleRpgEntities.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EquipmentId");
+
+                    b.HasIndex("ItemId");
 
                     b.ToTable("Players");
                 });
@@ -142,7 +149,7 @@ namespace ConsoleRpgEntities.Migrations
 
                     b.HasIndex("WeaponId");
 
-                    b.ToTable("Equipment");
+                    b.ToTable("Equipments");
                 });
 
             modelBuilder.Entity("ConsoleRpgEntities.Models.Equipment.Item", b =>
@@ -234,9 +241,11 @@ namespace ConsoleRpgEntities.Migrations
                 {
                     b.HasOne("ConsoleRpgEntities.Models.Equipment.Equipment", "Equipment")
                         .WithMany()
-                        .HasForeignKey("EquipmentId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("EquipmentId");
+
+                    b.HasOne("ConsoleRpgEntities.Models.Equipment.Item", null)
+                        .WithMany("Players")
+                        .HasForeignKey("ItemId");
 
                     b.Navigation("Equipment");
                 });
@@ -245,17 +254,20 @@ namespace ConsoleRpgEntities.Migrations
                 {
                     b.HasOne("ConsoleRpgEntities.Models.Equipment.Armor", "Armor")
                         .WithMany()
-                        .HasForeignKey("ArmorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("ArmorId");
 
                     b.HasOne("ConsoleRpgEntities.Models.Equipment.Weapon", "Weapon")
                         .WithMany()
-                        .HasForeignKey("WeaponId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("WeaponId");
 
                     b.Navigation("Armor");
 
                     b.Navigation("Weapon");
+                });
+
+            modelBuilder.Entity("ConsoleRpgEntities.Models.Equipment.Item", b =>
+                {
+                    b.Navigation("Players");
                 });
 #pragma warning restore 612, 618
         }
